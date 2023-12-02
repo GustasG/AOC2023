@@ -1,10 +1,12 @@
-#include "day1.hpp"
+module;
 
 #include <array>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <string_view>
+
+export module day1;
 
 namespace day1
 {
@@ -124,7 +126,7 @@ namespace day1
 		std::cout << '\t' << "part 2: " << total << '\n';
 	}
 
-	void solution()
+	export void solution()
 	{
 		std::cout << "day 1:" << '\n';
 

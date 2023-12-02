@@ -1,4 +1,4 @@
-#include "day2.hpp"
+module;
 
 #include <fstream>
 #include <iostream>
@@ -7,7 +7,9 @@
 #include <string>
 #include <vector>
 
-#include "utility.hpp"
+import utility;
+
+export module day2;
 
 namespace day2
 {
@@ -122,7 +124,7 @@ namespace day2
 		std::cout << '\t' << "part 2: " << result << '\n';
 	}
 
-	void solution()
+	export void solution()
 	{
 		std::cout << "day 2:" << '\n';
 

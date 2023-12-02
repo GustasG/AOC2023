@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 
-#include "day1.hpp"
-#include "day2.hpp"
+import day1;
+import day2;
 
 int main()
 {

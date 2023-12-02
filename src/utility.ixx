@@ -1,26 +1,34 @@
-#include "utility.hpp"
+module;
+
+#include <fstream>
+#include <string>
+#include <vector>
+
+export module utility;
 
 namespace utility
 {
-    void lstrip(std::string& s) {
+    export void lstrip(std::string& s)
+    {
         s.erase(s.begin(), std::find_if(s.begin(), s.end(), [] (char ch) {
             return !std::isspace(ch);
         }));
     }
 
-    void rstrip(std::string& s) {
+    export void rstrip(std::string& s)
+    {
         s.erase(std::find_if(s.rbegin(), s.rend(), [] (char ch) {
             return !std::isspace(ch);
         }).base(), s.end());
     }
 
-	void strip(std::string& s)
+	export void strip(std::string& s)
 	{
         lstrip(s);
         rstrip(s);
 	}
 
-    std::vector<std::string> read_lines(std::ifstream& file)
+    export std::vector<std::string> read_lines(std::ifstream& file)
     {
         std::vector<std::string> lines;
         std::string line;
