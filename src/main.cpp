@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 
 #include "day1.hpp"
+#include "day2.hpp"
 
 int main()
 {
@@ -9,4 +10,5 @@ int main()
 	std::cout << '\n';
 
 	day1::solution();
+	day2::solution();
 }

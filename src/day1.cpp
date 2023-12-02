@@ -1,8 +1,8 @@
 #include "day1.hpp"
 
+#include <array>
 #include <fstream>
 #include <iostream>
-#include <map>
 #include <string>
 #include <string_view>
 
@@ -11,15 +11,15 @@ namespace day1
 	static void part1()
 	{
 		std::ifstream file("data/day1.txt");
-		std::string line;
-		int total = 0;
 
 		if (!file.is_open())
 		{
-			std::cerr << '\t' << "Unable to open file: "
-					  << "data/day1.txt" << '\n';
+			std::cerr << '\t' << "Unable to open file: " << "data/day1.txt" << '\n';
 			return;
 		}
+
+		std::string line;
+		int total = 0;
 
 		while (std::getline(file, line))
 		{
@@ -46,12 +46,12 @@ namespace day1
 			total += 10 * left + right;
 		}
 
-		std::cout << '\t' << "part1: " << total << '\n';
+		std::cout << '\t' << "part 1: " << total << '\n';
 	}
 
 	static int match(std::string_view line)
 	{
-		static const std::map<std::string_view, int> digits = {
+		static const auto digits = std::to_array<std::pair<std::string_view, int>>({
 			{ "one", 1 },
 			{ "two", 2 },
 			{ "three", 3 },
@@ -61,15 +61,16 @@ namespace day1
 			{ "seven", 7 },
 			{ "eight", 8 },
 			{ "nine", 9 }
-		};
+		});
 
 		for (size_t i = 0; i < line.size(); i++)
 		{
-			auto it = digits.find(line.substr(i));
-
-			if (it != digits.end())
+			for (const auto& [key, value] : digits)
 			{
-				return it->second;
+				if (key == line.substr(i))
+				{
+					return value;
+				}
 			}
 		}
 
@@ -79,15 +80,15 @@ namespace day1
 	static void part2()
 	{
 		std::ifstream file("data/day1.txt");
-		std::string line;
-		int total = 0;
 
 		if (!file.is_open())
 		{
-			std::cerr << '\t' << "Unable to open file: "
-					  << "data/day1.txt" << '\n';
+			std::cerr << '\t' << "Unable to open file: " << "data/day1.txt" << '\n';
 			return;
 		}
+
+		std::string line;
+		int total = 0;
 
 		while (std::getline(file, line))
 		{
@@ -120,12 +121,12 @@ namespace day1
 			total += 10 * left + right;
 		}
 
-		std::cout << '\t' << "part2: " << total << '\n';
+		std::cout << '\t' << "part 2: " << total << '\n';
 	}
 
 	void solution()
 	{
-		std::cout << "day1:" << '\n';
+		std::cout << "day 1:" << '\n';
 
 		part1();
 		part2();
