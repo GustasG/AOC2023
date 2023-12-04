@@ -12,10 +12,10 @@
                 "CMAKE_CXX_COMPILER": "cl.exe"
             },
             "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Windows"
-            }
+            "type": "equals",
+            "lhs": "${hostSystemName}",
+            "rhs": "Windows"
+          }
         },
         {
             "name": "x64-debug",

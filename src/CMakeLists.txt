@@ -1,8 +1,9 @@
 add_executable (AOC2023
-  "main.cpp"
   "day1.ixx"
   "day2.ixx"
   "day3.ixx"
+  "day4.ixx"
+  "main.cpp"
   "utility.ixx"
 )
 

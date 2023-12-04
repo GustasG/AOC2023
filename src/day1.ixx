@@ -53,10 +53,10 @@ namespace day1
         }
 
         auto view = utility::read_lines(file)
-            | std::views::transform([](const std::string& line) {
+            | std::views::transform([] (const std::string& line) {
                 auto it = line
-                    | std::views::filter([](char c) { return std::isdigit(c); })
-                    | std::views::transform([](char c) { return c - '0'; });
+                    | std::views::filter([] (char c) { return std::isdigit(c); })
+                    | std::views::transform([] (char c) { return c - '0'; });
 
                 auto l = it | std::views::take(1);
                 auto r = it | std::views::reverse | std::views::take(1);
