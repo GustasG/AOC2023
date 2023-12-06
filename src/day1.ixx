@@ -42,18 +42,14 @@ namespace day1
         return 0;
     }
 
-    static void part1()
+    static void part1(std::string_view content)
     {
-        std::ifstream file("data/day1.txt");
+        utility::Timer t;
 
-        if (!file.is_open())
-        {
-            std::cerr << '\t' << "Unable to open file: " << "data/day1.txt" << '\n';
-            return;
-        }
-
-        auto view = utility::read_lines(file)
-            | std::views::transform([] (const std::string& line) {
+        auto view = content
+            | std::views::split('\n')
+            | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
+            | std::views::transform([] (std::string_view line) {
                 auto it = line
                     | std::views::filter([] (char c) { return std::isdigit(c); })
                     | std::views::transform([] (char c) { return c - '0'; });
@@ -67,28 +63,24 @@ namespace day1
 
         int result = std::accumulate(view.begin(), view.end(), 0);
 
-        std::cout << '\t' << "part 1: " << result << '\n';
+        std::cout << '\t' << "part 1: " << result;
     }
 
-    static void part2()
+    static void part2(std::string_view content)
     {
-        std::ifstream file("data/day1.txt");
+        utility::Timer t;
 
-        if (!file.is_open())
-        {
-            std::cerr << '\t' << "Unable to open file: " << "data/day1.txt" << '\n';
-            return;
-        }
-
-        auto view = utility::read_lines(file)
-            | std::views::transform([] (const std::string& line) {
+        auto view = content
+            | std::views::split('\n')
+            | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
+            | std::views::transform([] (std::string_view line) {
                 auto it = line
                     | std::views::enumerate
                     | std::views::transform([&] (const auto& pair) {
                         if (std::isdigit(std::get<1>(pair)))
                             return std::get<1>(pair) - '0';
 
-                        return match(std::string_view(line.c_str(), std::get<0>(pair) + 1));
+                        return match(std::string_view(line.data(), std::get<0>(pair) + 1));
                     })
                     | std::views::filter([] (int i) { return i != 0; });
 
@@ -101,14 +93,24 @@ namespace day1
 
         int result = std::accumulate(view.begin(), view.end(), 0);
 
-        std::cout << '\t' << "part 2: " << result << '\n';
+        std::cout << '\t' << "part 2: " << result;
     }
 
     export void solution()
     {
+        std::ifstream file("data/day1.txt");
+
         std::cout << "day 1:" << '\n';
 
-        part1();
-        part2();
+        if (!file.is_open())
+        {
+            std::cerr << '\t' << "Unable to open file: " << "data/day1.txt" << '\n';
+            return;
+        }
+
+        std::string content = utility::read_file(file);
+
+        part1(content);
+        part2(content);
     }
 } // namespace day1

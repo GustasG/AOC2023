@@ -83,54 +83,54 @@ namespace day2
         return red * green * blue;
     }
 
-    static void part1()
+    static void part1(std::string_view content)
     {
-        std::ifstream file("data/day2.txt");
-
-        if (!file.is_open())
-        {
-            std::cerr << '\t' << "Unable to open file: " << "data/day2.txt" << '\n';
-            return;
-        }
+        utility::Timer t;
 
         size_t result = 0;
 
-        for (const auto& [i, line] : utility::read_lines(file) | std::views::enumerate)
+        for (const auto& [i, line] : content | std::views::split('\n') | std::views::enumerate)
         {
-            if (is_game_possible(parse_game(line), 12, 13, 14))
+            if (is_game_possible(parse_game(std::string_view(line)), 12, 13, 14))
             {
                 result += i + 1;
             }
         }
 
-        std::cout << '\t' << "part 1: " << result << '\n';
+        std::cout << '\t' << "part 1: " << result;
     }
 
-    static void part2()
+    static void part2(std::string_view content)
     {
-        std::ifstream file("data/day2.txt");
+        utility::Timer t;
 
-        if (!file.is_open())
-        {
-            std::cerr << '\t' << "Unable to open file: " << "data/day2.txt" << '\n';
-            return;
-        }
-
-        auto view = utility::read_lines(file)
+        auto view = content
+            | std::views::split('\n')
+            | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
             | std::views::transform(parse_game)
             | std::views::transform(fewest_cubes)
             | std::views::common;
 
         int result = std::accumulate(view.begin(), view.end(), 0);
 
-        std::cout << '\t' << "part 2: " << result << '\n';
+        std::cout << '\t' << "part 2: " << result;
     }
 
     export void solution()
     {
+        std::ifstream file("data/day2.txt");
+
         std::cout << "day 2:" << '\n';
 
-        part1();
-        part2();
+        if (!file.is_open())
+        {
+            std::cerr << '\t' << "Unable to open file: " << "data/day2.txt" << '\n';
+            return;
+        }
+
+        std::string content = utility::read_file(file);
+
+        part1(content);
+        part2(content);
     }
 } // namespace day2

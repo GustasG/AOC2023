@@ -1,6 +1,8 @@
 module;
 
+#include <chrono>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -8,26 +10,6 @@ export module utility;
 
 namespace utility
 {
-    export void lstrip(std::string& s)
-    {
-        s.erase(s.begin(), std::find_if(s.begin(), s.end(), [] (char ch) {
-            return !std::isspace(ch);
-        }));
-    }
-
-    export void rstrip(std::string& s)
-    {
-        s.erase(std::find_if(s.rbegin(), s.rend(), [] (char ch) {
-            return !std::isspace(ch);
-        }).base(), s.end());
-    }
-
-    export void strip(std::string& s)
-    {
-        lstrip(s);
-        rstrip(s);
-    }
-
     export std::string_view sv_lstrip(std::string_view s)
     {
         s.remove_prefix(std::min(s.find_first_not_of(' '), s.size()));
@@ -72,4 +54,36 @@ namespace utility
 
 		return content;
 	}
+
+    export class Timer
+    {
+    public:
+        using Clock = std::chrono::steady_clock;
+
+        Timer()
+        {
+            start();
+        }
+
+        ~Timer()
+        {
+            stop();
+        }
+
+        void start()
+		{
+            start_ = Clock::now();
+		}
+
+        void stop() const
+        {
+            auto end = Clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start_);
+
+            std::cout << " (elapsed " << duration.count() << "ms)" << '\n';
+        }
+
+    private:
+        std::chrono::time_point<Clock> start_;
+    };
 } // namespace utility

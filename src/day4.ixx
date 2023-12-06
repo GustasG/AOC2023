@@ -25,7 +25,8 @@ namespace day4
     {
         return numbers
             | std::views::split(' ')
-            | std::views::transform([] (const auto& range) { return utility::sv_strip(std::string_view(range)); })
+            | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
+            | std::views::transform([] (std::string_view literal) { return utility::sv_strip(literal); })
             | std::views::filter([] (std::string_view literal) { return !literal.empty(); })
             | std::views::transform([] (std::string_view literal) {
                 int value;
@@ -64,17 +65,13 @@ namespace day4
         return static_cast<int>(result.size());
     }
 
-    static void part1()
+    static void part1(std::string_view content)
     {
-        std::ifstream file("data/day4.txt");
+        utility::Timer t;
 
-        if (!file.is_open())
-        {
-            std::cerr << '\t' << "Unable to open file: " << "data/day4.txt" << '\n';
-            return;
-        }
-
-        auto view = utility::read_lines(file)
+        auto view = content
+            | std::views::split('\n')
+            | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
             | std::views::transform(parse_card)
             | std::views::transform([] (Card&& card) { return count_matching(card); })
             | std::views::filter([] (int points) { return points > 0; })
@@ -83,20 +80,16 @@ namespace day4
 
         int result = std::accumulate(view.begin(), view.end(), 0);
 
-        std::cout << '\t' << "part 1: " << result << '\n';
+        std::cout << '\t' << "part 1: " << result;
     }
 
-    static void part2()
+    static void part2(std::string_view content)
     {
-        std::ifstream file("data/day4.txt");
+        utility::Timer t;
 
-        if (!file.is_open())
-        {
-            std::cerr << '\t' << "Unable to open file: " << "data/day4.txt" << '\n';
-            return;
-        }
-
-        auto card_matches = utility::read_lines(file)
+        auto card_matches = content
+            | std::views::split('\n')
+            | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
             | std::views::transform(parse_card)
             | std::views::transform([] (Card&& card) { return count_matching(card); })
             | std::views::enumerate
@@ -109,12 +102,9 @@ namespace day4
 
         for (const auto& [i, matches] : card_matches)
         {
-            for (size_t j = 0; j < card_counts[i]; j++)
+            for (size_t j = i + 1; j <= i + matches; j++)
             {
-                for (size_t k = i + 1; k <= i + matches; k++)
-                {
-                    card_counts[k] += 1;
-                }
+                card_counts[j] += card_counts[i];
             }
         }
 
@@ -123,14 +113,24 @@ namespace day4
 
         int result = std::accumulate(view.begin(), view.end(), 0);
 
-        std::cout << '\t' << "part 2: " << result << '\n';
+        std::cout << '\t' << "part 2: " << result;
     }
 
     export void solution()
     {
+        std::ifstream file("data/day4.txt");
+
         std::cout << "day 4:" << '\n';
 
-        part1();
-        part2();
+        if (!file.is_open())
+        {
+            std::cerr << '\t' << "Unable to open file: " << "data/day4.txt" << '\n';
+            return;
+        }
+
+        std::string content = utility::read_file(file);
+
+        part1(content);
+        part2(content);
     }
 } // namespace day4

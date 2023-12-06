@@ -136,6 +136,8 @@ namespace day3
             return;
         }
 
+        utility::Timer t;
+
         auto lines = utility::read_lines(file);
         auto numbers = find_numbers(lines);
 
@@ -146,7 +148,7 @@ namespace day3
 
         int result = std::accumulate(view.begin(), view.end(), 0);
 
-        std::cout << '\t' << "part 1: " << result << '\n';
+        std::cout << '\t' << "part 1: " << result;
     }
 
     static void part2()
@@ -159,6 +161,8 @@ namespace day3
             return;
         }
 
+        utility::Timer t;
+
         auto lines = utility::read_lines(file);
         auto numbers = find_numbers(lines);
 
@@ -169,7 +173,7 @@ namespace day3
 
         int result = std::accumulate(values.begin(), values.end(), 0);
 
-        std::cout << '\t' << "part 2: " << result << '\n';
+        std::cout << '\t' << "part 2: " << result;
     }
 
     export void solution()
