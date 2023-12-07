@@ -172,9 +172,9 @@ namespace day5
         {
             #pragma omp parallel for reduction(min:result)
             for (ptrdiff_t i = interval.start; i < interval.end; i++)
-			{
+            {
                 result = std::min(result, fn(i));
-			}
+            }
         }
 
         std::cout << '\t' << "part 2: " << result << '\n';

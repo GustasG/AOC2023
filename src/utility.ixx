@@ -43,17 +43,17 @@ namespace utility
     }
 
     export std::string read_file(std::ifstream& file)
-	{
-		std::string content;
+    {
+        std::string content;
 
-		file.seekg(0, std::ios::end);
-		content.reserve(file.tellg());
-		file.seekg(0, std::ios::beg);
+        file.seekg(0, std::ios::end);
+        content.reserve(static_cast<size_t>(file.tellg()));
+        file.seekg(0, std::ios::beg);
 
-		content.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+        content.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
 
-		return content;
-	}
+        return content;
+    }
 
     export class Timer
     {
@@ -71,14 +71,14 @@ namespace utility
         }
 
         void start()
-		{
+        {
             start_ = Clock::now();
-		}
+        }
 
         void stop() const
         {
             auto end = Clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start_);
+            auto duration = std::chrono::duration<float, std::milli>(end - start_);
 
             std::cout << " (elapsed " << duration.count() << "ms)" << '\n';
         }
