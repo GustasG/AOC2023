@@ -11,3 +11,9 @@ add_executable (AOC2023
 
 set_property(TARGET AOC2023 PROPERTY CXX_STANDARD 23)
 set_property(TARGET AOC2023 PROPERTY CXX_STANDARD_REQUIRED ON)
+
+target_link_libraries(AOC2023 PUBLIC OpenMP::OpenMP_CXX)
+
+if(MSVC)
+  target_compile_options(AOC2023 PUBLIC "/openmp:llvm")
+endif()

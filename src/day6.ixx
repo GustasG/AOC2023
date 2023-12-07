@@ -53,9 +53,9 @@ namespace day6
             | std::views::transform([] (std::string_view line) {
                 return line
                     | std::views::split(' ')
-                    | std::views::transform([](auto&& range) { return std::string_view(std::move(range)); })
-                    | std::views::filter([](std::string_view literal) { return !literal.empty(); })
-                    | std::views::transform([](std::string_view literal) {
+                    | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
+                    | std::views::filter([] (std::string_view literal) { return !literal.empty(); })
+                    | std::views::transform([] (std::string_view literal) {
                         size_t value;
                         std::from_chars(literal.data(), literal.data() + literal.size(), value);
                         return value;

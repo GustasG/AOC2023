@@ -29,6 +29,12 @@ namespace day5
         std::vector<std::array<size_t, 3>> humidity_to_location_map;
     };
 
+    struct Interval
+    {
+        size_t start;
+        size_t end;
+    };
+
     static std::vector<size_t> parse_seed_map(std::string_view part)
     {
         return part
@@ -50,14 +56,14 @@ namespace day5
             | std::views::drop(1)
             | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
             | std::views::transform([] (std::string_view literal) {
-                auto rng = literal
-                    | std::views::split(' ')
-                    | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
-                    | std::views::transform([] (std::string_view s) {
-                        size_t value;
-                        std::from_chars(s.data(), s.data() + s.size(), value);
-                        return value;
-                    });
+            auto rng = literal
+                | std::views::split(' ')
+                | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
+                | std::views::transform([] (std::string_view s) {
+                    size_t value;
+                    std::from_chars(s.data(), s.data() + s.size(), value);
+                    return value;
+                });
 
                 std::array<size_t, 3> result;
                 std::ranges::copy(rng, result.begin());
@@ -105,10 +111,19 @@ namespace day5
         return value;
     }
 
+    static std::vector<Interval> walk_range(const std::vector<std::array<size_t, 3>>& map, const std::vector<Interval>& range)
+    {
+        std::vector<Interval> result;
+
+
+
+        return result;
+    }
+
     static void part1(std::string_view content)
     {
         utility::Timer t;
-        
+
         Almanac almanac = parse_file(content);
 
         auto view = almanac.seeds
@@ -127,9 +142,42 @@ namespace day5
 
     static void part2(std::string_view content)
     {
-        Almanac almanac = parse_file(content);
+        utility::Timer t;
 
-        std::cout << '\t' << "part 2: Not completed!" << '\n';
+        Almanac almanac = parse_file(content);
+        std::vector<Interval> intervals;
+
+        for (size_t i = 0; i < almanac.seeds.size(); i += 2)
+        {
+            auto start = almanac.seeds[i];
+            auto size = almanac.seeds[i + 1];
+            intervals.push_back({ start, start + size });
+        }
+
+        auto fn = [&] (size_t seed) {
+            seed = walk_map(almanac.seed_to_soil_map, seed);
+            seed = walk_map(almanac.soil_to_fertilizer_map, seed);
+            seed = walk_map(almanac.fertilizer_to_water_map, seed);
+            seed = walk_map(almanac.water_to_light_map, seed);
+            seed = walk_map(almanac.light_to_temperature_map, seed);
+            seed = walk_map(almanac.temperature_to_humidity_map, seed);
+            seed = walk_map(almanac.humidity_to_location_map, seed);
+            return seed;
+        };
+
+        auto result = std::numeric_limits<size_t>::max();
+
+        // TODO: implement proper interval intersection search and not use OpenMP
+        for (const auto& interval : intervals)
+        {
+            #pragma omp parallel for reduction(min:result)
+            for (ptrdiff_t i = interval.start; i < interval.end; i++)
+			{
+                result = std::min(result, fn(i));
+			}
+        }
+
+        std::cout << '\t' << "part 2: " << result << '\n';
     }
 
     export void solution()

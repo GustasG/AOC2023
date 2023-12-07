@@ -12,5 +12,7 @@ project(
   LANGUAGES CXX
 )
 
+find_package(OpenMP REQUIRED)
+
 add_subdirectory("src")
 target_include_directories(AOC2023 PRIVATE "src")
