@@ -9,7 +9,7 @@ add_executable (AOC2023
   "main.cpp"
   "day8.ixx"
   "utility.ixx"
-)
+ "day9.ixx")
 
 set_property(TARGET AOC2023 PROPERTY CXX_STANDARD 23)
 set_property(TARGET AOC2023 PROPERTY CXX_STANDARD_REQUIRED ON)
