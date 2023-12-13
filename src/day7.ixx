@@ -212,7 +212,7 @@ namespace day7
 
         size_t result = calculate_winnings(hands);
 
-        std::cout << '\t' << "part 2: Not completed!" << result;
+        std::cout << '\t' << "part 2: Not completed!" << result << '\n';
     }
 
     export void solution()

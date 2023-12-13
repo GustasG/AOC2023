@@ -29,19 +29,6 @@ namespace utility
         return sv_lstrip(sv_rstrip(s));
     }
 
-    export std::vector<std::string> read_lines(std::ifstream& file)
-    {
-        std::vector<std::string> lines;
-        std::string line;
-
-        while (std::getline(file, line))
-        {
-            lines.push_back(line);
-        }
-
-        return lines;
-    }
-
     export std::string read_file(std::ifstream& file)
     {
         std::string content;

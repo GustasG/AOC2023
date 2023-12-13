@@ -126,19 +126,11 @@ namespace day3
         return result;
     }
 
-    static void part1()
+    static void part1(std::string_view content)
     {
-        std::ifstream file("data/day3.txt");
-
-        if (!file.is_open())
-        {
-            std::cerr << '\t' << "Unable to open file: " << "data/day3.txt" << '\n';
-            return;
-        }
-
         utility::Timer t;
 
-        auto lines = utility::read_lines(file);
+        auto lines = content | std::views::split('\n') | std::ranges::to<std::vector<std::string>>();
         auto numbers = find_numbers(lines);
 
         auto view = find_numbers(lines)
@@ -151,19 +143,11 @@ namespace day3
         std::cout << '\t' << "part 1: " << result;
     }
 
-    static void part2()
+    static void part2(std::string_view content)
     {
-        std::ifstream file("data/day3.txt");
-
-        if (!file.is_open())
-        {
-            std::cerr << '\t' << "Unable to open file: " << "data/day3.txt" << '\n';
-            return;
-        }
-
         utility::Timer t;
 
-        auto lines = utility::read_lines(file);
+        auto lines = content | std::views::split('\n') | std::ranges::to<std::vector<std::string>>();
         auto numbers = find_numbers(lines);
 
         auto values = find_gears(lines, numbers)
@@ -178,9 +162,19 @@ namespace day3
 
     export void solution()
     {
+        std::ifstream file("data/day3.txt");
+
         std::cout << "day 3:" << '\n';
 
-        part1();
-        part2();
+        if (!file.is_open())
+        {
+            std::cerr << '\t' << "Unable to open file: " << "data/day3.txt" << '\n';
+            return;
+        }
+
+        std::string content = utility::read_file(file);
+
+        part1(content);
+        part2(content);
     }
 } // namespace day3

@@ -195,6 +195,6 @@ namespace day5
         std::string content = utility::read_file(file);
 
         part1(content);
-        part2(content);
+       // part2(content);
     }
 } // namespace day5
