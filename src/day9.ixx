@@ -69,17 +69,21 @@ namespace day9
 
     static void part1(std::string_view content)
     {
+        utility::Timer t;
+
         auto view = parse_file(content)
             | std::views::transform(extrapolate)
             | std::views::common;
 
         long long result = std::accumulate(view.begin(), view.end(), static_cast<long long>(0));
 
-        std::cout << '\t' << "part 1: " << result << '\n';
+        std::cout << '\t' << "part 1: " << result;
     }
 
     static void part2(std::string_view content)
     {
+        utility::Timer t;
+
         auto view = parse_file(content)
             | std::views::transform([] (std::vector<long long>& numbers) {
                 std::reverse(numbers.begin(), numbers.end());
@@ -90,7 +94,7 @@ namespace day9
 
         long long result = std::accumulate(view.begin(), view.end(), static_cast<long long>(0));
 
-        std::cout << '\t' << "part 1: " << result << '\n';
+        std::cout << '\t' << "part 1: " << result;
     }
 
     export void solution()

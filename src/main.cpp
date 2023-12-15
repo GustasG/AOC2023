@@ -9,6 +9,7 @@ import day6;
 import day7;
 import day8;
 import day9;
+import day10;
 
 int main()
 {
@@ -24,4 +25,5 @@ int main()
     day7::solution();
     day8::solution();
     day9::solution();
+    day10::solution();
 }
