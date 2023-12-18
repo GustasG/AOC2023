@@ -94,7 +94,7 @@ namespace day9
 
         long long result = std::accumulate(view.begin(), view.end(), static_cast<long long>(0));
 
-        std::cout << '\t' << "part 1: " << result;
+        std::cout << '\t' << "part 2: " << result;
     }
 
     export void solution()
