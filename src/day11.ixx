@@ -1,15 +1,15 @@
 module;
 
-#include <numeric>
 #include <fstream>
 #include <iostream>
-#include <string>
-#include <string_view>
-#include <vector>
-#include <ranges>
-#include <unordered_set>
+#include <numeric>
 #include <queue>
+#include <ranges>
+#include <string_view>
+#include <string>
 #include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 import utility;
 
@@ -36,38 +36,25 @@ struct std::hash<Vertex>
 
 namespace day11
 {
-    static std::vector<std::vector<char>> parse_file(std::string_view content)
+    static std::vector<std::string_view> parse_file(std::string_view content)
     {
         return content
             | std::views::split('\n')
-            | std::views::transform([] (auto&& range) { return std::vector<char>(std::from_range, std::move(range)); })
-            | std::ranges::to<std::vector<std::vector<char>>>();
+            | std::views::transform([] (auto&& range) { return std::string_view(std::move(range)); })
+            | std::ranges::to<std::vector<std::string_view>>();
     }
 
-    static std::vector<std::string_view> expand_horizontally(std::string_view content)
+    static std::vector<int> find_empty_rows(std::span<std::string_view> map, int increment)
     {
-        std::vector<std::string_view> lines;
+        std::vector<int> result;
+        int total = 0;
 
-        for (auto&& range : std::ranges::views::split(content, '\n'))
+        for (std::string_view line : map)
         {
-            std::string_view line(std::move(range));
-            lines.push_back(line);
-
             if (!line.contains('#'))
-                lines.push_back(line);
-        }
+                total += increment;
 
-        return lines;
-    }
-
-    static std::vector<size_t> horizontal_lines(std::span<std::string_view> lines)
-    {
-        std::vector<size_t> result;
-
-        for (size_t i = 0; i < lines.size(); i++)
-        {
-            if (lines[i].contains('#'))
-                result.push_back(i);
+            result.push_back(total);
         }
 
         return result;
@@ -84,40 +71,27 @@ namespace day11
         return false;
     }
 
-    static std::vector<std::vector<char>> expand_vertically(std::span<std::string_view> lines)
+    static std::vector<int> find_empty_columns(std::span<std::string_view> map, int increment)
     {
-        std::vector<std::vector<char>> map(lines.size());
+        std::vector<int> result;
+        int total = 0;
 
-        for (size_t i = 0; i < lines[0].size(); i++)
+        for (size_t i = 0; i < map[0].size(); i++)
         {
-            for (size_t j = 0; j < map.size(); j++)
-                map[j].push_back(lines[j][i]);
+            if (!contains(map, i, '#'))
+                total += increment;
 
-            if (!contains(lines, i, '#'))
-            {
-                for (size_t j = 0; j < map.size(); j++)
-                    map[j].push_back(lines[j][i]);
-            }
-        }
-
-        return map;
-    }
-
-    static std::vector<size_t> vertical_lines(std::span<std::string_view> lines)
-    {
-        std::vector<size_t> result;
-
-        for (size_t i = 0; i < lines.size(); i++)
-        {
-            if (contains(lines, i, '#'))
-                result.push_back(i);
+            result.push_back(total);
         }
 
         return result;
     }
-    
-    static std::vector<Vertex> find_galaxies(std::vector<std::vector<char>> map)
+
+    static std::vector<Vertex> find_galaxies(std::span<std::string_view> map, int increment)
     {
+        std::vector<int> empty_rows = find_empty_rows(map, increment);
+        std::vector<int> empty_columns = find_empty_columns(map, increment);
+
         std::vector<Vertex> vertices;
 
         for (size_t i = 0; i < map.size(); i++)
@@ -126,11 +100,11 @@ namespace day11
             {
                 if (map[i][j] == '#')
                 {
-                        vertices.push_back(Vertex
-                        {
-                            .x = static_cast<int>(j),
-                            .y = static_cast<int>(i)
-                        });
+                    vertices.push_back(Vertex
+                    {
+                        .x = static_cast<int>(j) + empty_columns[j],
+                        .y = static_cast<int>(i) + empty_rows[i]
+                    });
                 }
             }
         }
@@ -142,9 +116,9 @@ namespace day11
     {
         utility::Timer t;
 
-        std::vector<std::string_view> lines = expand_horizontally(content);
-        std::vector<std::vector<char>> map = expand_vertically(lines);
-        std::vector<Vertex> vertices = find_galaxies(map);
+        std::vector<std::string_view> lines = parse_file(content);
+        std::vector<Vertex> vertices = find_galaxies(lines, 1);
+        
         int result = 0;
 
         for (size_t i = 0; i < vertices.size(); i++)
@@ -154,19 +128,28 @@ namespace day11
                 result += std::abs(vertices[i].x - vertices[j].x) + std::abs(vertices[i].y - vertices[j].y);
             }
         }
-        
+
         std::cout << '\t' << "part 1: " << result;
     }
 
     static void part2(std::string_view content)
     {
-        std::vector<std::vector<char>> map = parse_file(content);
-        std::vector<Vertex> vertices = find_galaxies(map);
+        utility::Timer t;
 
-        for (auto&& vertex : vertices)
+        std::vector<std::string_view> lines = parse_file(content);
+        std::vector<Vertex> vertices = find_galaxies(lines, 1'000'000 - 1);
+
+        size_t result = 0;
+
+        for (size_t i = 0; i < vertices.size(); i++)
         {
-            std::cout << vertex.x << ' ' << vertex.y << '\n';
+            for (size_t j = i + 1; j < vertices.size(); j++)
+            {
+                result += static_cast<size_t>(std::abs(vertices[i].x - vertices[j].x)) + static_cast<size_t>(std::abs(vertices[i].y - vertices[j].y));
+            }
         }
+
+        std::cout << '\t' << "part 2: " << result;
     }
 
     export void solution()

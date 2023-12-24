@@ -154,7 +154,7 @@ namespace day10
 
     static void part2(std::string_view content)
     {
-
+        std::cout << '\t' << "part 2: Not completed!" << '\n';
     }
 
     export void solution()
